@@ -103,6 +103,8 @@ def datasetselector():
     df = get_sf_users_df()
   else:
     df = get_sf_contracts_df()
+
+  st.session_state.selecteddf = df
   return df
 
 
