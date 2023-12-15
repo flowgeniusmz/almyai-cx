@@ -85,6 +85,15 @@ def get_sf_contracts_df(varSF):
   return df
 
 
+def load_sf_data():
+  sf = get_sf_connection()
+  dfUser = get_sf_users_df(sf)
+  if "dfUser" not in st.session_state:
+    st.session_state.dfUser = dfUser
+  dfContracts = get_sf_contracts_df(sf)
+  if dfContracts not in st.session_state:
+    st.session_state.dfContracts = dfContracts
+    
 
 
 
