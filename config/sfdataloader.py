@@ -1,5 +1,6 @@
 import streamlit as st
 from simple_salesforce import Salesforce 
+import pandas as pd
 
 @st.cache_resource
 def get_sf_connection():
