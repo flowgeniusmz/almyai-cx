@@ -94,7 +94,16 @@ def load_sf_data():
   dfContracts = get_sf_contracts_df(sf)
   if dfContracts not in st.session_state:
     st.session_state.dfContracts = dfContracts
-    
+
+
+def datasetselector():
+  if st.session_state.selecteddataset == "Contracts":
+    df = get_sf_contracts_df()
+  elif st.session_state.selecteddataset == "Users":
+    df = get_sf_users_df()
+  else:
+    df = get_sf_contracts_df()
+  return df
 
 
 
