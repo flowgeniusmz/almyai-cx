@@ -1,8 +1,17 @@
 import streamtlit as st
-from config import pagesetup as ps
+from config import pagesetup as ps, sfdataloader as sfdc
+import pandas as pd
+
 
 
 st.set_page_config(page_title="MagicBook Creator", page_icon="🌐☁️", layout="wide", initial_sidebar_state="collapsed")
+
+if "loadsfdata" not in st.session_state:
+  st.toast("Loading SF data...")
+  sfdc.get_sf_data()
+  st.toast("SF data loaded!")
+  st.session_state.loadsfdata = True
+  
 ps.set_title("AlmyAI", "CX")
 
 user = "Dominic Watson"
@@ -14,7 +23,7 @@ tab_ExpiringContracts, tab_SendEmails, tab_AskAI = st.tabs(["Expiring Contracts"
 
 with tab_ExpiringContracts:
   ps.get_blue_header("Expiring Contracts")
-
+  
 with tab_SendEmails:
   ps.get_blue_header("Send Emails")
 
