@@ -11,7 +11,8 @@ def get_sf_connection():
   return sf
 
 @st.cache_data
-def get_sf_users_df(varSF):
+def get_sf_users_df():
+    varSF = get_sf_connection()
     query = "SELECT Id, Username, LastName, FirstName, Name, Email FROM User WHERE Subsidiary__c = 'Alma Lasers , Inc.'"
     data = varSF.query(query)
     records = data['records']
@@ -29,7 +30,8 @@ def get_sf_users_df(varSF):
     return df
 
 @st.cache_data
-def get_sf_contracts_df(varSF):
+def get_sf_contracts_df():
+  varSF = get_sf_connection()
   query = "SELECT Id, AccountId, Account.Name, StartDate, EndDate, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingStateCode, BillingCountryCode, BillingLatitude, BillingLongitude, BillingGeocodeAccuracy, BillingAddress, ShippingStreet, ShippingCity, ShippingState, ShippingPostalCode, ShippingCountry, ShippingStateCode, ShippingCountryCode, ShippingLatitude, ShippingLongitude, ShippingGeocodeAccuracy, ShippingAddress, ContractTerm, OwnerId, Owner.Name, Status, Asset__c, Serial_Number__c, BP__c, Product_Name__c, Sales_Order__c, Contract_Price__c, Type__c, Opportunity_Opend__c, Product__c, Subsidiary__c FROM Contract WHERE Subsidiary__c = 'Alma Lasers , Inc.'"
   data = varSF.query(query)
   records = data['records']
