@@ -24,7 +24,8 @@ tab_ExpiringContracts, tab_SendEmails, tab_AskAI = st.tabs(["Expiring Contracts"
 
 with tab_ExpiringContracts:
   ps.get_blue_header("Expiring Contracts")
-  st.dataframe(sfdata)
+  df = sfdc.get_sf_contracts_data()
+  df_contracts = st.dataframe(df)
 with tab_SendEmails:
   ps.get_blue_header("Send Emails")
 
