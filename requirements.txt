@@ -44,3 +44,4 @@ pyautogen #microsoft automous assistants
 opencv-python
 Pillow
 streamlit-aggrid
+pygwalker

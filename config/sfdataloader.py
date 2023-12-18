@@ -4,9 +4,9 @@ import pandas as pd
 
 @st.cache_resource
 def get_sf_connection():
-  sfUser = st.secrets.salesforce.username
-  sfpw = st.secrets.salesforce.password
-  sftoken = st.secrets.salesforce.token
+  sfUser = st.secrets.salesforce.sfuser
+  sfpw = st.secrets.salesforce.sfcred
+  sftoken = st.secrets.salesforce.sftoken
   sf = Salesforce(username=sfUser, password=sfpw, security_token=sftoken)
   return sf
 
@@ -90,10 +90,10 @@ def get_sf_contracts_df():
 
 def load_sf_data():
   sf = get_sf_connection()
-  dfUser = get_sf_users_df(sf)
+  dfUser = get_sf_users_df()
   if "dfUser" not in st.session_state:
     st.session_state.dfUser = dfUser
-  dfContracts = get_sf_contracts_df(sf)
+  dfContracts = get_sf_contracts_df()
   if dfContracts not in st.session_state:
     st.session_state.dfContracts = dfContracts
 
@@ -110,4 +110,62 @@ def datasetselector():
   return df
 
 
+def displaycontainers(df):
 
+    # Generate containers for each row
+    for index, row in df.iterrows():
+        with st.container():
+            expander = st.expander(f"AccountId: {row['AccountId']}")
+            with expander:
+                st.write(row)
+
+    # Add empty containers if there are less than 12 rows
+    for _ in range(12 - len(df)):
+        st.empty()
+
+def chunk_dataframe(dataframe, chunk_size):
+    for i in range(0, len(dataframe), chunk_size):
+        yield dataframe.iloc[i:i + chunk_size]
+
+
+def displaycontainers1(dataframe, chunksize):
+   for chunk in chunk_dataframe(dataframe, 4):
+        cols = st.columns(4)
+        for i, row in enumerate(chunk.itertuples()):
+            with cols[i]:
+                expander = st.expander(f"AccountId: {row.AccountId}")
+                with expander:
+                    st.write(row)
+
+        for i in range(len(chunk), 4):
+            with cols[i]:
+                st.empty()
+
+
+
+
+def calculate_total_pages(dataframe, limit_per_page):
+    return (len(dataframe) - 1) // limit_per_page + 1
+
+def get_current_page_data(dataframe, page, limit_per_page):
+    start = (page - 1) * limit_per_page
+    end = start + limit_per_page
+    return dataframe.iloc[start:end]
+
+def displaycontainers2(df):
+    total_pages = calculate_total_pages(df, 12)
+    current_page = st.sidebar.number_input("Page", min_value=1, max_value=total_pages, value=1)
+
+    current_data = get_current_page_data(df, current_page, 12)
+
+    for chunk in chunk_dataframe(current_data, 4):
+        cols = st.columns(4)
+        for i, row in enumerate(chunk.itertuples()):
+            with cols[i]:
+                expander = st.expander(f"AccountId: {row.AccountId}")
+                with expander:
+                    st.write(row)
+
+        for i in range(len(chunk), 4):
+            with cols[i]:
+                st.empty()
